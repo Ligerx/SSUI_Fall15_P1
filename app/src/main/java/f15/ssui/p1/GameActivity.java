@@ -20,6 +20,8 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_game);
+
         // Find the new game button in the layout.
         Button newGameButton = (Button) findViewById(R.id.newGameButton);
 
@@ -36,7 +38,7 @@ public class GameActivity extends AppCompatActivity {
             }
         });
 
-        setContentView(R.layout.activity_game);
+//        setContentView(R.layout.activity_game);
     }
 
     @Override
