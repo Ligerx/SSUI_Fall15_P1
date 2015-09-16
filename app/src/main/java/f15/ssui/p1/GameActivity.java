@@ -15,6 +15,8 @@ import android.widget.TextView;
  * @author Nikola (nbanovic@cs.cmu.edu)
  */
 public class GameActivity extends AppCompatActivity {
+    private int score = 0; // number of moves taken
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +32,15 @@ public class GameActivity extends AppCompatActivity {
         // puzzle.
         newGameButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Reset the score.
+                // Get the score text
                 TextView scoreText = (TextView) findViewById(R.id.scoreText);
-                // TODO: reset the score to zero here using the scoreText variable.
+
+                // Reset the score to zero
+                score = 0;
+                scoreText.setText("Score: " + score);
 
                 // TODO: Put your code that shuffles the puzzle here.
+
             }
         });
 
