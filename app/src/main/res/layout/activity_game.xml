@@ -11,9 +11,10 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Score: 0"
         android:id="@+id/scoreText"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="true"
+        android:layout_toLeftOf="@id/newGameButton"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -23,4 +24,11 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+    
+    <f15.ssui.p1.GameBoard
+        android:id="@+id/gameBoard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/newGameButton"
+        android:layout_marginTop="15dp"></f15.ssui.p1.GameBoard>
 </RelativeLayout>
