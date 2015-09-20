@@ -13,7 +13,6 @@
         android:id="@+id/scoreText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_centerHorizontal="true"
         android:layout_toLeftOf="@id/newGameButton"/>
 
     <Button
@@ -30,5 +29,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/newGameButton"
-        android:layout_marginTop="15dp"></f15.ssui.p1.GameBoard>
+        android:layout_marginTop="15dp">
+
+        <f15.ssui.p1.TileView
+            android:id="@+id/button0x0"
+            android:layout_width="0"
+            android:layout_height="0" />
+
+        <f15.ssui.p1.TileView
+            android:id="@+id/button1x0"
+            android:layout_width="0"
+            android:layout_height="0" />
+
+        <f15.ssui.p1.TileView
+            android:id="@+id/button2x0"
+            android:layout_width="0"
+            android:layout_height="0" />
+
+        <f15.ssui.p1.TileView
+            android:id="@+id/button3x0"
+            android:layout_width="0"
+            android:layout_height="0" />
+
+        <f15.ssui.p1.TileView
+            android:id="@+id/button0x1"
+            android:layout_width="0"
+            android:layout_height="0" />
+
+    </f15.ssui.p1.GameBoard>
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package f15.ssui.p1;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
@@ -21,22 +22,28 @@ public class GameBoard extends ViewGroup {
         super(context, attrs);
     }
 
-    public GameBoard(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-//    public GameBoard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-//        super(context, attrs, defStyleAttr, defStyleRes);
-//    }
-
-
 
     /**
      * Position all children within this layout.
      */
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        final int numChildren = getChildCount();
+
+
+        // Loop through rows
+        for (int row = 0; row < NUM_ROWS; row++) {
+            // Loop through columns
+            for (int col = 0; col < NUM_COLUMNS; col++) {
+                TileView tile = getTileAt(col, row);
+
+
+                tile.setBackgroundColor(Color.rgb(100, 100, 50));
+
+                tile.layout(col);
+            }
+        }
+
+//        final int numChildren = getChildCount();
 //
 //        // These are the far left and right edges in which we are performing layout.
 //        int leftPos = getPaddingLeft();
@@ -83,6 +90,11 @@ public class GameBoard extends ViewGroup {
 //                        mTmpChildRect.right, mTmpChildRect.bottom);
 //            }
 //        }
+    }
+
+    // Getter, conveniently turns coordinates into a TileView
+    private TileView getTileAt(int x, int y) {
+        return (TileView) getChildAt(x + y);
     }
 
 }
