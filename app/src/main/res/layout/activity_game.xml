@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text="New Game"
         android:id="@+id/newGameButton"
-        android:layout_below="@+id/scoreText"
-        android:layout_alignRight="@+id/scoreText"
-        android:layout_alignEnd="@+id/scoreText" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>
