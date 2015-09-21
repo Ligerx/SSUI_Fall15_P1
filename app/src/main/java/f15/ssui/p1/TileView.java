@@ -37,6 +37,7 @@ public class TileView extends ImageView {
         this.imgNum = imgNum;
     }
 
+
     // Getters
     int getCol() {
         return this.col;

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,6 +14,9 @@ public class GameBoard extends ViewGroup /*implements View.OnTouchListener*/ {
     // Grid size
     final int NUM_ROWS = 4;
     final int NUM_COLUMNS = 4;
+
+    // Location of blank tile
+    private int blankLocation = 15;
 
     public GameBoard(Context context) {
         super(context);
@@ -50,22 +52,33 @@ public class GameBoard extends ViewGroup /*implements View.OnTouchListener*/ {
                 tile.setGridLocation(col, row);
                 tile.setImgNum(coordinateToIndex(col, row));
 
-                tile.setOnTouchListener(new View.OnTouchListener() {
+
+                tile.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        Log.d("tile touch", "in Tile Touch");
-                        TileView x = (TileView) v;
-//                        GameBoard y = (GameBoard) v;
+                    public void onClick(View view) {
+                        Log.d("tile touch", "in Tile on click");
 
-                        if(event.getAction() == MotionEvent.ACTION_DOWN){
-                            Log.d("tile touch", "is action down");
-                            return false; // Bubble up to action to the board!
-                        }
-
-                        return true; // Not the event we want, end the action
+                        GameBoard gameBoard = (GameBoard) view.getParent();
+                        gameBoard.clickTile((TileView) view);
                     }
-
                 });
+
+//                tile.setOnTouchListener(new View.OnTouchListener() {
+//                    @Override
+//                    public boolean onTouch(View v, MotionEvent event) {
+//                        Log.d("tile touch", "in Tile Touch");
+//                        TileView x = (TileView) v;
+////                        GameBoard y = (GameBoard) v;
+//
+//                        if(event.getAction() == MotionEvent.ACTION_DOWN){
+//                            Log.d("tile touch", "is action down");
+//                            return false; // Bubble up to action to the board!
+//                        }
+//
+//                        return true; // Not the event we want, end the action
+//                    }
+//
+//                });
 
 
 
@@ -106,6 +119,15 @@ public class GameBoard extends ViewGroup /*implements View.OnTouchListener*/ {
     private TileView getTileAt(int col, int row) {
         Log.d("GetTileAt", String.valueOf(col+row*4));
         return (TileView) getChildAt(coordinateToIndex(col, row));
+    }
+
+    // Call when a tile is clicked
+    // Game's tile switching logic happens here
+    private void clickTile(TileView tile) {
+        Log.d("gameboard handle click", "parent got click notification");
+        Log.d("gameboard handle click", "tile row: "+tile.getRow()+" column: "+tile.getCol());
+        Log.d("gameboard handle click", "tile imgNum: "+tile.getImgNum());
+
     }
 
 }
