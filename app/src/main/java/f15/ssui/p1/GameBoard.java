@@ -134,7 +134,7 @@ public class GameBoard extends ViewGroup {
         // FIXME the tiles are currently only a background color.
         // There's no actual bitmap on them.
         // Need to figure out how to split the image first.
-        
+
         TileView x = tile;
         Drawable y = tile.getDrawable();
         Bitmap tileBitmap = ((BitmapDrawable)tile.getDrawable()).getBitmap();
