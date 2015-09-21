@@ -7,8 +7,8 @@ import android.widget.ImageView;
 public class TileView extends ImageView {
 
     // Position of the tile in the grid
-    private int xPos;
-    private int yPos;
+    private int col;
+    private int row;
 
     // displayed image's number. In order = solved.
     private int imgNum;
@@ -27,27 +27,26 @@ public class TileView extends ImageView {
     }
 
 
-
     // Setters
-    void setGridLocation(int xPos, int yPos) {
-        this.xPos = xPos;
-        this.yPos = yPos;
+    void setGridLocation(int col, int row) {
+        this.col = col;
+        this.row = row;
     }
 
-    void setImageNumber(int imgNum) {
+    void setImgNum(int imgNum) {
         this.imgNum = imgNum;
     }
 
     // Getters
-    int getXPosition() {
-        return this.xPos;
+    int getCol() {
+        return this.col;
     }
 
-    int getYPosition() {
-        return this.yPos;
+    int getRow() {
+        return this.row;
     }
 
-    int getImageNumber() {
+    int getImgNum() {
         return this.imgNum;
     }
 

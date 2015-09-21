@@ -4,11 +4,13 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.Random;
 
-public class GameBoard extends ViewGroup {
+public class GameBoard extends ViewGroup /*implements View.OnTouchListener*/ {
 
     // Grid size
     final int NUM_ROWS = 4;
@@ -46,7 +48,26 @@ public class GameBoard extends ViewGroup {
                 // Get tile and set it up
                 TileView tile = getTileAt(col, row);
                 tile.setGridLocation(col, row);
-                tile.setImageNumber(coordinateToIndex(col, row));
+                tile.setImgNum(coordinateToIndex(col, row));
+
+                tile.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        Log.d("tile touch", "in Tile Touch");
+                        TileView x = (TileView) v;
+//                        GameBoard y = (GameBoard) v;
+
+                        if(event.getAction() == MotionEvent.ACTION_DOWN){
+                            Log.d("tile touch", "is action down");
+                            return false; // Bubble up to action to the board!
+                        }
+
+                        return true; // Not the event we want, end the action
+                    }
+
+                });
+
+
 
                 // Give tile a random color (temporary)
                 Random rnd = new Random();
@@ -60,6 +81,23 @@ public class GameBoard extends ViewGroup {
         }
     }
 
+
+
+//    // This object's listener
+//    @Override
+//    public boolean onTouch(View v, MotionEvent event) {
+//        TileView tile = (TileView) v;
+//        Log.i("onClick info", "Clicked view's info: -------------------");
+//        Log.i("onClick info", "col: "+tile.getCol());
+//        Log.i("onClick info", "row: "+tile.getRow());
+//        Log.i("onClick info", "img num:"+tile.getImgNum());
+//
+//        return true;
+//    }
+
+
+
+    // Changes a coordinate (AxB) into an index # to get children
     private int coordinateToIndex(int col, int row) {
         return col + row * 4;
     }
@@ -69,6 +107,5 @@ public class GameBoard extends ViewGroup {
         Log.d("GetTileAt", String.valueOf(col+row*4));
         return (TileView) getChildAt(coordinateToIndex(col, row));
     }
-
 
 }
