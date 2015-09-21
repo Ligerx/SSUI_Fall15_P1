@@ -1,7 +1,10 @@
 package f15.ssui.p1;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -9,14 +12,14 @@ import android.view.ViewGroup;
 
 import java.util.Random;
 
-public class GameBoard extends ViewGroup /*implements View.OnTouchListener*/ {
+public class GameBoard extends ViewGroup {
 
     // Grid size
     final int NUM_ROWS = 4;
     final int NUM_COLUMNS = 4;
 
-    // Location of blank tile
-    private int blankLocation = 15;
+    // ref to the blank tile
+    private TileView blankTile;
 
     public GameBoard(Context context) {
         super(context);
@@ -63,29 +66,16 @@ public class GameBoard extends ViewGroup /*implements View.OnTouchListener*/ {
                     }
                 });
 
-//                tile.setOnTouchListener(new View.OnTouchListener() {
-//                    @Override
-//                    public boolean onTouch(View v, MotionEvent event) {
-//                        Log.d("tile touch", "in Tile Touch");
-//                        TileView x = (TileView) v;
-////                        GameBoard y = (GameBoard) v;
-//
-//                        if(event.getAction() == MotionEvent.ACTION_DOWN){
-//                            Log.d("tile touch", "is action down");
-//                            return false; // Bubble up to action to the board!
-//                        }
-//
-//                        return true; // Not the event we want, end the action
-//                    }
-//
-//                });
-
-
-
                 // Give tile a random color (temporary)
                 Random rnd = new Random();
                 int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
                 tile.setBackgroundColor(color);
+
+                // 15 is the last tile. Special case
+                if(15 == coordinateToIndex(col, row)) {
+                    setBlankTile(tile);
+                    tile.setBackgroundColor(Color.WHITE);
+                }
 
                 // Set tile corners
                 tile.layout(col * tileWidth, row * tileHeight,
@@ -93,21 +83,6 @@ public class GameBoard extends ViewGroup /*implements View.OnTouchListener*/ {
             }
         }
     }
-
-
-
-//    // This object's listener
-//    @Override
-//    public boolean onTouch(View v, MotionEvent event) {
-//        TileView tile = (TileView) v;
-//        Log.i("onClick info", "Clicked view's info: -------------------");
-//        Log.i("onClick info", "col: "+tile.getCol());
-//        Log.i("onClick info", "row: "+tile.getRow());
-//        Log.i("onClick info", "img num:"+tile.getImgNum());
-//
-//        return true;
-//    }
-
 
 
     // Changes a coordinate (AxB) into an index # to get children
@@ -126,8 +101,60 @@ public class GameBoard extends ViewGroup /*implements View.OnTouchListener*/ {
     private void clickTile(TileView tile) {
         Log.d("gameboard handle click", "parent got click notification");
         Log.d("gameboard handle click", "tile row: "+tile.getRow()+" column: "+tile.getCol());
-        Log.d("gameboard handle click", "tile imgNum: "+tile.getImgNum());
+        Log.d("gameboard handle click", "tile imgNum: " + tile.getImgNum());
 
+        if(!isNextToBlankTile(tile)) { Log.d("gameboard handle click", "Not next to blank tile"); return; }
+
+        swapTileWithBlank(tile);
+        // TODO check for win condition
+
+        // TODO show message on win?
+        // TODO prevent further actions on win?
+    }
+
+    private boolean isNextToBlankTile(TileView tile) {
+        int xDist = Math.abs(tile.getCol() - getBlankTile().getCol());
+        int yDist = Math.abs(tile.getRow() - getBlankTile().getRow());
+
+        // Clicked tile must be exactly 1 away in 1 direction
+        // and 0 away in another direction
+        //
+        // NOTE: this method also prevents clicking the blank tile to be true
+        if((xDist == 1 && yDist == 0) ||
+           (xDist == 0 && yDist == 1)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+    private void swapTileWithBlank(TileView tile) {
+        // FIXME the tiles are currently only a background color.
+        // There's no actual bitmap on them.
+        // Need to figure out how to split the image first.
+        
+        TileView x = tile;
+        Drawable y = tile.getDrawable();
+        Bitmap tileBitmap = ((BitmapDrawable)tile.getDrawable()).getBitmap();
+        Bitmap blankBitmap = ((BitmapDrawable)getBlankTile().getDrawable()).getBitmap();
+
+        // Swap the images
+        tile.setImageBitmap(blankBitmap);
+        getBlankTile().setImageBitmap(tileBitmap);
+
+        // Update the blank tile reference
+        setBlankTile(tile);
+    }
+
+
+    private void setBlankTile(TileView tile) {
+        this.blankTile = tile;
+    }
+
+    private TileView getBlankTile() {
+        return this.blankTile;
     }
 
 }
