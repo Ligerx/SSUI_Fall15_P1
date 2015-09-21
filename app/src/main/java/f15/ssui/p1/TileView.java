@@ -6,12 +6,12 @@ import android.widget.ImageView;
 
 public class TileView extends ImageView {
 
-//    // Position of the tile in the grid
-//    private int xPos;
-//    private int yPos;
-//
-//    // displayed image's number. In order = solved.
-//    private int imgNum;
+    // Position of the tile in the grid
+    private int xPos;
+    private int yPos;
+
+    // displayed image's number. In order = solved.
+    private int imgNum;
 
 
     public TileView(Context context) {
@@ -28,27 +28,27 @@ public class TileView extends ImageView {
 
 
 
-//    // Setters
-//    void setGridLocation(int xPos, int yPos) {
-//        this.xPos = xPos;
-//        this.yPos = yPos;
-//    }
-//
-//    void setImageNumber(int imgNum) {
-//        this.imgNum = imgNum;
-//    }
-//
-//    // Getters
-//    int getXPosition() {
-//        return this.xPos;
-//    }
-//
-//    int getYPosition() {
-//        return this.yPos;
-//    }
-//
-//    int getImageNumber() {
-//        return this.imgNum;
-//    }
+    // Setters
+    void setGridLocation(int xPos, int yPos) {
+        this.xPos = xPos;
+        this.yPos = yPos;
+    }
+
+    void setImageNumber(int imgNum) {
+        this.imgNum = imgNum;
+    }
+
+    // Getters
+    int getXPosition() {
+        return this.xPos;
+    }
+
+    int getYPosition() {
+        return this.yPos;
+    }
+
+    int getImageNumber() {
+        return this.imgNum;
+    }
 
 }
