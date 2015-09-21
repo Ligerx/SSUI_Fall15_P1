@@ -13,7 +13,7 @@
         android:id="@+id/scoreText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@id/newGameButton"/>
+        />
 
     <Button
         android:layout_width="wrap_content"
@@ -23,7 +23,50 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
-    
+
+    <!--<GridLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@id/newGameButton"-->
+        <!--android:layout_marginTop="15dp"-->
+        <!--android:rowCount="4"-->
+        <!--android:columnCount="4"-->
+        <!--android:layout_alignParentBottom="true">-->
+
+
+        <!--<Button-->
+            <!--android:layout_columnWeight="1"-->
+            <!--android:layout_rowWeight="1"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:text="B"-->
+            <!--android:id="@+id/button4" />-->
+
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="B"-->
+            <!--android:id="@+id/button3" />-->
+
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="New Button"-->
+            <!--android:id="@+id/button5" />-->
+
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Button"-->
+            <!--android:id="@+id/button2" />-->
+
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="B"-->
+            <!--android:id="@+id/button" />-->
+    <!--</GridLayout>-->
+
     <f15.ssui.p1.GameBoard
         android:id="@+id/gameBoard"
         android:layout_width="match_parent"
@@ -33,28 +76,87 @@
 
         <f15.ssui.p1.TileView
             android:id="@+id/button0x0"
-            android:layout_width="0"
-            android:layout_height="0" />
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
 
         <f15.ssui.p1.TileView
             android:id="@+id/button1x0"
-            android:layout_width="0"
-            android:layout_height="0" />
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
 
         <f15.ssui.p1.TileView
             android:id="@+id/button2x0"
-            android:layout_width="0"
-            android:layout_height="0" />
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
 
         <f15.ssui.p1.TileView
             android:id="@+id/button3x0"
-            android:layout_width="0"
-            android:layout_height="0" />
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
 
         <f15.ssui.p1.TileView
             android:id="@+id/button0x1"
-            android:layout_width="0"
-            android:layout_height="0" />
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
+        <f15.ssui.p1.TileView
+            android:id="@+id/button1x1"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
+        <f15.ssui.p1.TileView
+            android:id="@+id/button2x1"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
+        <f15.ssui.p1.TileView
+            android:id="@+id/button3x1"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
+        <f15.ssui.p1.TileView
+            android:id="@+id/button0x2"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
+        <f15.ssui.p1.TileView
+            android:id="@+id/button1x2"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
+        <f15.ssui.p1.TileView
+            android:id="@+id/button2x2"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
+        <f15.ssui.p1.TileView
+            android:id="@+id/button3x2"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
+        <f15.ssui.p1.TileView
+            android:id="@+id/button0x3"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
+        <f15.ssui.p1.TileView
+            android:id="@+id/button1x3"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
+        <f15.ssui.p1.TileView
+            android:id="@+id/button2x3"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
+        <f15.ssui.p1.TileView
+            android:id="@+id/button3x3"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
 
     </f15.ssui.p1.GameBoard>
+
+
+
 </RelativeLayout>

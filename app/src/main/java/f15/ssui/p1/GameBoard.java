@@ -3,7 +3,10 @@ package f15.ssui.p1;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ViewGroup;
+
+import java.util.Random;
 
 /**
  * Created by admin on 9/20/15.
@@ -28,6 +31,18 @@ public class GameBoard extends ViewGroup {
      */
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        // 4x4 grid
+        if(getChildCount() != 16) { Log.e("children", "Not given 16 children!?"); return; }
+
+        int width = getWidth();
+        int height = getHeight();
+
+        int tileWidth = width / NUM_COLUMNS;
+        int tileHeight = height / NUM_ROWS;
+
+//        TileView tile = (TileView) getChildAt(0);
+//        tile.setBackgroundColor(Color.GREEN);
+//        tile.layout(0, 0, 100, 100);
 
 
         // Loop through rows
@@ -36,10 +51,18 @@ public class GameBoard extends ViewGroup {
             for (int col = 0; col < NUM_COLUMNS; col++) {
                 TileView tile = getTileAt(col, row);
 
+                Log.d("fuck everything", "col: "+col+" row: "+row);
+//                Log.d("fuck everything", tile.toString());
 
-                tile.setBackgroundColor(Color.rgb(100, 100, 50));
 
-                tile.layout(col);
+                Random rnd = new Random();
+                int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+
+                tile.setBackgroundColor(color);
+
+
+                tile.layout(col * tileWidth, row * tileHeight,
+                        (col * tileWidth) + tileWidth, (row * tileHeight) + tileHeight);
             }
         }
 
@@ -93,8 +116,9 @@ public class GameBoard extends ViewGroup {
     }
 
     // Getter, conveniently turns coordinates into a TileView
-    private TileView getTileAt(int x, int y) {
-        return (TileView) getChildAt(x + y);
+    private TileView getTileAt(int col, int row) {
+        Log.d("GetTileAt", String.valueOf(col+row*4));
+        return (TileView) getChildAt(col + row*4);
     }
 
 }
