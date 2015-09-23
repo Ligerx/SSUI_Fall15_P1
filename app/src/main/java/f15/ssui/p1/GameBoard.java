@@ -55,7 +55,7 @@ public class GameBoard extends ViewGroup {
         Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.duck);
         ImageSplitter tileImages = new ImageSplitter(width, height, tileWidth, tileHeight, image);
 
-        Bitmap whiteTile = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Bitmap whiteTile = Bitmap.createBitmap(tileWidth, tileHeight, Bitmap.Config.ARGB_8888);
         whiteTile.eraseColor(Color.WHITE);
 
         tileImages.setImageAtIndex(15, whiteTile);
@@ -105,8 +105,8 @@ System.out.println("------------ in tileImages check");
                 // 15 is the last tile. Special case
                 if(15 == currentIndex) {
                     setBlankTile(tile);
-                    tile.setImageDrawable(null);
-                    tile.setBackgroundColor(Color.WHITE);
+//                    tile.setImageDrawable(null);
+//                    tile.setBackgroundColor(Color.WHITE);
                 }
 
 
@@ -188,14 +188,13 @@ System.out.println("-------- TOP OF SWAP TILE");
         // Need to figure out how to split the image first.
 
         BitmapDrawable tileDrawable = (BitmapDrawable)tile.getDrawable();
+        BitmapDrawable blankDrawable = (BitmapDrawable)getBlankTile().getDrawable();
 
         // Extra test to see if the images exist first
-        if(tileDrawable != null) {
+        if(tileDrawable != null && blankDrawable != null) {
 System.out.println("----------- INSIDE SWAP CHECK");
             // Swap the images
-//            tile.setImageBitmap(tileDrawable.getBitmap());
-            tile.setImageDrawable(null);
-            tile.setBackgroundColor(((ColorDrawable) getBlankTile().getBackground()).getColor());
+            tile.setImageBitmap(blankDrawable.getBitmap());
             getBlankTile().setImageBitmap(tileDrawable.getBitmap());
         }
         else {
