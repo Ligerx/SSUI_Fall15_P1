@@ -90,7 +90,7 @@ public class GameBoard extends ViewGroup {
 System.out.println("------------ in tileImages check");
 
                     Bitmap tileImage = tileImages.getImageAtIndex(currentIndex);
-//                    addWhiteBorder(tileImage, 1); // might need it to return a new bitmap?
+                    addWhiteBorder(tileImage, 5); // might need it to return a new bitmap?
 
                     tile.setImageBitmap(tileImage);
                 }
@@ -130,9 +130,12 @@ System.out.println("------------ in tileImages check");
         Paint paint = new Paint();
 
         paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(borderSize);
         paint.setColor(Color.WHITE);
 
-        canvas.drawBitmap(image, borderSize, borderSize, paint);
+
+//        canvas.drawBitmap(image, borderSize, borderSize, paint);
+        canvas.drawRect(0, 0, image.getWidth(), image.getHeight(), paint);
         return image;
     }
 
