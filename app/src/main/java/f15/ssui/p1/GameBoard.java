@@ -91,7 +91,7 @@ public class GameBoard extends ViewGroup {
         }
 
         //// ALSO SHUFFLE THE BOARD
-        shuffleBoard(50);
+        shuffleBoard(100);
     }
 
 
