@@ -41,7 +41,7 @@ public class GameActivity extends AppCompatActivity {
 
                 // Shuffle the puzzle
                 GameBoard gameBoard = (GameBoard) findViewById(R.id.gameBoard);
-                gameBoard.shuffleBoard(100);
+                gameBoard.shuffleBoard();
             }
         });
     }

@@ -30,6 +30,14 @@ public class TileView extends ImageView {
     }
 
 
+    // convenience method to swap around img nums after swapping images
+    public void swapImgNums(TileView other) {
+        int otherImgNum = other.getImgNum();
+
+        other.setImgNum(getImgNum());
+        setImgNum(otherImgNum);
+    }
+
 
     // Setters
     void setGridLocation(int col, int row) {

@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.Random;
 
@@ -91,12 +92,14 @@ public class GameBoard extends ViewGroup {
         }
 
         //// ALSO SHUFFLE THE BOARD
-        shuffleBoard(100);
+        shuffleBoard();
     }
 
 
-    public void shuffleBoard(int times) {
-        for(int i = 0; i < times; i++) {
+    public void shuffleBoard() {
+        int shuffleTimes = 1; // TODO make 100 when done
+
+        for(int i = 0; i < shuffleTimes; i++) {
             swapRandomTile();
         }
     }
@@ -208,15 +211,25 @@ public class GameBoard extends ViewGroup {
         Log.d("gameboard handle click", "tile row: "+tile.getRow()+" column: "+tile.getCol());
         Log.d("gameboard handle click", "tile imgNum: " + tile.getImgNum());
 
+        // Escape click if already won
+        if(isWinningState()) { Log.d("gameboard handle click", "Already in win state"); return; }
+
+        // Escape click if not next to a blank tile
         if(!isNextToBlankTile(tile)) { Log.d("gameboard handle click", "Not next to blank tile"); return; }
 
         swapTileWithBlank(tile);
+
+        // TODO update score
+
         // TODO check for win condition
+        if(isWinningState()) {
+            Toast.makeText(getContext(), "You figured it out!",
+            Toast.LENGTH_LONG).show();
+        }
 
         // TODO show message on win?
         // TODO prevent further actions on win?
 
-        // TODO update score
     }
 
     private boolean isNextToBlankTile(TileView tile) {
@@ -255,8 +268,24 @@ public class GameBoard extends ViewGroup {
             getBlankTile().setBackgroundColor(tileColor);
         }
 
+        // swap imgNums as well to keep track of win state
+        getBlankTile().swapImgNums(tile);
+
         // Update the blank tile reference
         setBlankTile(tile);
+    }
+
+    boolean isWinningState() {
+        int numTiles = getChildCount();
+
+        for(int i = 0; i < numTiles; i++) {
+            // Check that all TileViews' imgNum are in order
+            TileView tile = (TileView) getChildAt(i);
+System.out.println(tile.getImgNum());
+            if(tile.getImgNum() != i) { return false; }
+        }
+
+        return true;
     }
 
 
