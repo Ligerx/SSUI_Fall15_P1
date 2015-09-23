@@ -55,25 +55,15 @@ public class GameBoard extends ViewGroup {
         Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.duck);
         ImageSplitter tileImages = new ImageSplitter(width, height, tileWidth, tileHeight, image);
 
-        Bitmap whiteTile = Bitmap.createBitmap(tileWidth, tileHeight, Bitmap.Config.ARGB_8888);
-        whiteTile.eraseColor(Color.WHITE);
-
-        tileImages.setImageAtIndex(15, whiteTile);
-
         // Loop through rows
         for (int row = 0; row < NUM_ROWS; row++) {
             // Loop through columns
             for (int col = 0; col < NUM_COLUMNS; col++) {
                 Log.d("column and row", "col: " + col + " row: " + row);
 
-                int currentIndex = coordinateToIndex(col, row);
+                TileView tile = setupAndGetTileView(col, row, tileImages);
 
-                // Get tile and set it up
-                TileView tile = getTileAt(col, row);
-                tile.setGridLocation(col, row);
-                tile.setImgNum(currentIndex);
-
-
+                // On click listener to communicate to the parent GameBoard
                 tile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -84,48 +74,50 @@ public class GameBoard extends ViewGroup {
                     }
                 });
 
-
-
-                if(tileImages != null) {
-System.out.println("------------ in tileImages check");
-
-                    Bitmap tileImage = tileImages.getImageAtIndex(currentIndex);
-                    addWhiteBorder(tileImage, 5); // might need it to return a new bitmap?
-
-                    tile.setImageBitmap(tileImage);
-                }
-                else {
-                    // Give tile a random color (temporary)
-                    Random rnd = new Random();
-                    int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-                    tile.setBackgroundColor(color);
-                }
-
-
                 // 15 is the last tile. Special case
-                if(15 == currentIndex) {
+                if(15 == coordinateToIndex(col, row)) {
                     setBlankTile(tile);
-//                    tile.setImageDrawable(null);
-//                    tile.setBackgroundColor(Color.WHITE);
+                    tile.setImageBitmap(createWhiteTile(tileWidth, tileHeight));
                 }
 
-
-
-
-
-
-
-                // Set tile corners
+                // Lay out the tile on the display
                 tile.layout(col * tileWidth, row * tileHeight,
                         (col * tileWidth) + tileWidth, (row * tileHeight) + tileHeight);
             }
         }
     }
 
+    private TileView setupAndGetTileView(int col, int row, ImageSplitter tileImages) {
+        // Setup TileView data
+        TileView tile = getTileAt(col, row);
+        tile.setGridLocation(col, row);
+        tile.setImgNum(coordinateToIndex(col, row));
 
+        // Setup the image shown
+        if(tileImages != null) {
+            Bitmap tileImage = tileImages.getImageAtIndex(coordinateToIndex(col, row));
+            addWhiteBorder(tileImage, 5);
+
+            tile.setImageBitmap(tileImage);
+        }
+        else {
+            // Give tile a random color (temporary, for testing)
+            Random rnd = new Random();
+            int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+            tile.setBackgroundColor(color);
+        }
+
+        return tile;
+    }
+
+    private Bitmap createWhiteTile(int width, int height) {
+        Bitmap whiteTile = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        whiteTile.eraseColor(Color.WHITE);
+
+        return whiteTile;
+    }
 
     private Bitmap addWhiteBorder(Bitmap image, int borderSize) {
-//        Bitmap bmpWithBorder = Bitmap.createBitmap(bmp.getWidth() + borderSize * 2, bmp.getHeight() + borderSize * 2, bmp.getConfig());
         Canvas canvas = new Canvas(image);
         Paint paint = new Paint();
 
@@ -133,8 +125,6 @@ System.out.println("------------ in tileImages check");
         paint.setStrokeWidth(borderSize);
         paint.setColor(Color.WHITE);
 
-
-//        canvas.drawBitmap(image, borderSize, borderSize, paint);
         canvas.drawRect(0, 0, image.getWidth(), image.getHeight(), paint);
         return image;
     }
@@ -164,6 +154,8 @@ System.out.println("------------ in tileImages check");
 
         // TODO show message on win?
         // TODO prevent further actions on win?
+
+        // TODO update score
     }
 
     private boolean isNextToBlankTile(TileView tile) {
@@ -182,10 +174,7 @@ System.out.println("------------ in tileImages check");
         }
     }
 
-
-
     private void swapTileWithBlank(TileView tile) {
-System.out.println("-------- TOP OF SWAP TILE");
         // FIXME the tiles are currently only a background color.
         // There's no actual bitmap on them.
         // Need to figure out how to split the image first.
@@ -195,12 +184,12 @@ System.out.println("-------- TOP OF SWAP TILE");
 
         // Extra test to see if the images exist first
         if(tileDrawable != null && blankDrawable != null) {
-System.out.println("----------- INSIDE SWAP CHECK");
             // Swap the images
             tile.setImageBitmap(blankDrawable.getBitmap());
             getBlankTile().setImageBitmap(tileDrawable.getBitmap());
         }
         else {
+            // TODO just ignore this stuff, not needed anymore
             // If no bitmap found, swap the background colors instead
             int tileColor = ((ColorDrawable) tile.getBackground()).getColor();
             int blankColor = ((ColorDrawable) getBlankTile().getBackground()).getColor();

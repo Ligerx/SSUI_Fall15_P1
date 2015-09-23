@@ -27,9 +27,6 @@ public class ImageSplitter {
 
 
     private Bitmap fitImage(Bitmap image) {
-        // TODO slice off excess (ratio)
-        // TODO scale to right dimensions
-
         Bitmap result = image;
 
         // These need to be cast to double so division works
@@ -42,13 +39,14 @@ public class ImageSplitter {
         if(imageRatio > desiredRatio) {
             // if the image is wider than desired
             // w2 = w1/h1 * h2
-System.out.println(this.width);
-System.out.println(this.height);
-System.out.println(desiredRatio);
-System.out.println(imageRatio);
-System.out.println((desiredRatio * image.getHeight()));
-System.out.println((int)(desiredRatio * image.getHeight()));
-System.out.println(image.getHeight());
+
+            //System.out.println(this.width);
+            //System.out.println(this.height);
+            //System.out.println(desiredRatio);
+            //System.out.println(imageRatio);
+            //System.out.println((desiredRatio * image.getHeight()));
+            //System.out.println((int)(desiredRatio * image.getHeight()));
+            //System.out.println(image.getHeight());
 
             result = Bitmap.createBitmap(image, 0, 0, (int)(desiredRatio * image.getHeight()), image.getHeight());
         }
@@ -65,9 +63,8 @@ System.out.println(image.getHeight());
         return result;
     }
 
+    // Slice image into ordered pieces
     private ArrayList<Bitmap> sliceImage(Bitmap image) {
-        // TODO make array of the sliced images in order
-
         ArrayList<Bitmap> result = new ArrayList<Bitmap>();
 
         // loop through height
@@ -85,7 +82,4 @@ System.out.println(image.getHeight());
         return this.slicedImages.get(index);
     }
 
-    public void setImageAtIndex(int index, Bitmap image) {
-        this.slicedImages.set(index, image);
-    }
 }
