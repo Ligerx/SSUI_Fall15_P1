@@ -4,6 +4,9 @@ import android.graphics.Bitmap;
 
 import java.util.ArrayList;
 
+// Takes an image and some dimensions
+// Crops and scales an image to fit the given viewport and tile dimensions
+// Slices them and puts them into an array
 public class ImageSplitter {
 
     private int width;

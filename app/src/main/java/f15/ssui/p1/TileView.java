@@ -14,6 +14,9 @@ public class TileView extends ImageView {
     private int imgNum;
 
 
+    /**
+     * Constructors
+     */
     public TileView(Context context) {
         super(context);
     }
@@ -27,6 +30,7 @@ public class TileView extends ImageView {
     }
 
 
+
     // Setters
     void setGridLocation(int col, int row) {
         this.col = col;
@@ -36,6 +40,7 @@ public class TileView extends ImageView {
     void setImgNum(int imgNum) {
         this.imgNum = imgNum;
     }
+
 
 
     // Getters
