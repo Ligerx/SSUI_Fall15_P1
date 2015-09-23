@@ -3,7 +3,9 @@ package f15.ssui.p1;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
@@ -53,6 +55,11 @@ public class GameBoard extends ViewGroup {
         Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.duck);
         ImageSplitter tileImages = new ImageSplitter(width, height, tileWidth, tileHeight, image);
 
+        Bitmap whiteTile = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        whiteTile.eraseColor(Color.WHITE);
+
+        tileImages.setImageAtIndex(15, whiteTile);
+
         // Loop through rows
         for (int row = 0; row < NUM_ROWS; row++) {
             // Loop through columns
@@ -80,7 +87,12 @@ public class GameBoard extends ViewGroup {
 
 
                 if(tileImages != null) {
-                    tile.setImageBitmap(tileImages.getImageAtIndex(currentIndex));
+System.out.println("------------ in tileImages check");
+
+                    Bitmap tileImage = tileImages.getImageAtIndex(currentIndex);
+//                    addWhiteBorder(tileImage, 1); // might need it to return a new bitmap?
+
+                    tile.setImageBitmap(tileImage);
                 }
                 else {
                     // Give tile a random color (temporary)
@@ -93,8 +105,15 @@ public class GameBoard extends ViewGroup {
                 // 15 is the last tile. Special case
                 if(15 == currentIndex) {
                     setBlankTile(tile);
+                    tile.setImageDrawable(null);
                     tile.setBackgroundColor(Color.WHITE);
                 }
+
+
+
+
+
+
 
                 // Set tile corners
                 tile.layout(col * tileWidth, row * tileHeight,
@@ -103,6 +122,19 @@ public class GameBoard extends ViewGroup {
         }
     }
 
+
+
+    private Bitmap addWhiteBorder(Bitmap image, int borderSize) {
+//        Bitmap bmpWithBorder = Bitmap.createBitmap(bmp.getWidth() + borderSize * 2, bmp.getHeight() + borderSize * 2, bmp.getConfig());
+        Canvas canvas = new Canvas(image);
+        Paint paint = new Paint();
+
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.WHITE);
+
+        canvas.drawBitmap(image, borderSize, borderSize, paint);
+        return image;
+    }
 
     // Changes a coordinate (AxB) into an index # to get children
     private int coordinateToIndex(int col, int row) {
@@ -150,18 +182,21 @@ public class GameBoard extends ViewGroup {
 
 
     private void swapTileWithBlank(TileView tile) {
+System.out.println("-------- TOP OF SWAP TILE");
         // FIXME the tiles are currently only a background color.
         // There's no actual bitmap on them.
         // Need to figure out how to split the image first.
 
         BitmapDrawable tileDrawable = (BitmapDrawable)tile.getDrawable();
-        BitmapDrawable blankDrawable = (BitmapDrawable)getBlankTile().getDrawable();
 
         // Extra test to see if the images exist first
-        if(tileDrawable != null && blankDrawable != null) {
+        if(tileDrawable != null) {
+System.out.println("----------- INSIDE SWAP CHECK");
             // Swap the images
-            tile.setImageBitmap(tileDrawable.getBitmap());
-            getBlankTile().setImageBitmap(blankDrawable.getBitmap());
+//            tile.setImageBitmap(tileDrawable.getBitmap());
+            tile.setImageDrawable(null);
+            tile.setBackgroundColor(((ColorDrawable) getBlankTile().getBackground()).getColor());
+            getBlankTile().setImageBitmap(tileDrawable.getBitmap());
         }
         else {
             // If no bitmap found, swap the background colors instead

@@ -32,8 +32,9 @@ public class ImageSplitter {
 
         Bitmap result = image;
 
-        double desiredRatio = this.width / this.height;
-        double imageRatio = image.getWidth() / image.getHeight();
+        // These need to be cast to double so division works
+        double desiredRatio = this.width / (double) this.height;
+        double imageRatio = image.getWidth() / (double) image.getHeight();
 
         //////////
         //// Crop the image if necessary
@@ -41,6 +42,14 @@ public class ImageSplitter {
         if(imageRatio > desiredRatio) {
             // if the image is wider than desired
             // w2 = w1/h1 * h2
+System.out.println(this.width);
+System.out.println(this.height);
+System.out.println(desiredRatio);
+System.out.println(imageRatio);
+System.out.println((desiredRatio * image.getHeight()));
+System.out.println((int)(desiredRatio * image.getHeight()));
+System.out.println(image.getHeight());
+
             result = Bitmap.createBitmap(image, 0, 0, (int)(desiredRatio * image.getHeight()), image.getHeight());
         }
         else if(imageRatio < desiredRatio) {
@@ -74,5 +83,9 @@ public class ImageSplitter {
 
     public Bitmap getImageAtIndex(int index) {
         return this.slicedImages.get(index);
+    }
+
+    public void setImageAtIndex(int index, Bitmap image) {
+        this.slicedImages.set(index, image);
     }
 }
