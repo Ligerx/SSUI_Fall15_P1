@@ -20,6 +20,10 @@ public class GameBoard extends ViewGroup {
     // ref to the blank tile
     private TileView blankTile;
 
+
+    /**
+     * Constructors
+     */
     public GameBoard(Context context) {
         super(context);
     }
@@ -65,15 +69,26 @@ public class GameBoard extends ViewGroup {
                     }
                 });
 
+
+
                 // Give tile a random color (temporary)
                 Random rnd = new Random();
                 int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
                 tile.setBackgroundColor(color);
 
+
+
+
+
+
+
                 // 15 is the last tile. Special case
                 if(15 == coordinateToIndex(col, row)) {
                     setBlankTile(tile);
                     tile.setBackgroundColor(Color.WHITE);
+
+//Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.duck);
+//tile.setImageBitmap(image);
                 }
 
                 // Set tile corners
