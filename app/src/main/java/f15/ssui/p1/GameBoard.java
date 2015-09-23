@@ -1,10 +1,9 @@
 package f15.ssui.p1;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -135,14 +134,23 @@ public class GameBoard extends ViewGroup {
         // There's no actual bitmap on them.
         // Need to figure out how to split the image first.
 
-        TileView x = tile;
-        Drawable y = tile.getDrawable();
-        Bitmap tileBitmap = ((BitmapDrawable)tile.getDrawable()).getBitmap();
-        Bitmap blankBitmap = ((BitmapDrawable)getBlankTile().getDrawable()).getBitmap();
+        BitmapDrawable tileDrawable = (BitmapDrawable)tile.getDrawable();
+        BitmapDrawable blankDrawable = (BitmapDrawable)getBlankTile().getDrawable();
 
-        // Swap the images
-        tile.setImageBitmap(blankBitmap);
-        getBlankTile().setImageBitmap(tileBitmap);
+        // Extra test to see if the images exist first
+        if(tileDrawable != null && blankDrawable != null) {
+            // Swap the images
+            tile.setImageBitmap(tileDrawable.getBitmap());
+            getBlankTile().setImageBitmap(blankDrawable.getBitmap());
+        }
+        else {
+            // If no bitmap found, swap the background colors instead
+            int tileColor = ((ColorDrawable) tile.getBackground()).getColor();
+            int blankColor = ((ColorDrawable) getBlankTile().getBackground()).getColor();
+
+            tile.setBackgroundColor(blankColor);
+            getBlankTile().setBackgroundColor(tileColor);
+        }
 
         // Update the blank tile reference
         setBlankTile(tile);
