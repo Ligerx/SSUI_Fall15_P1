@@ -22,6 +22,9 @@ public class GameBoard extends ViewGroup {
     final int NUM_ROWS = 4;
     final int NUM_COLUMNS = 4;
 
+    // # times to shuffle the board
+    final int SHUFFLE_TIMES = 100;
+
     // ref to the blank tile
     private TileView blankTile;
 
@@ -97,9 +100,7 @@ public class GameBoard extends ViewGroup {
 
 
     public void shuffleBoard() {
-        int shuffleTimes = 1; // TODO make 100 when done
-
-        for(int i = 0; i < shuffleTimes; i++) {
+        for(int i = 0; i < this.SHUFFLE_TIMES; i++) {
             swapRandomTile();
         }
     }
@@ -219,17 +220,15 @@ public class GameBoard extends ViewGroup {
 
         swapTileWithBlank(tile);
 
-        // TODO update score
+        // Update score
+        GameActivity gameActivity = (GameActivity) getContext();
+        gameActivity.incrementScore();
 
-        // TODO check for win condition
+        // Show winning message on victory
         if(isWinningState()) {
             Toast.makeText(getContext(), "You figured it out!",
             Toast.LENGTH_LONG).show();
         }
-
-        // TODO show message on win?
-        // TODO prevent further actions on win?
-
     }
 
     private boolean isNextToBlankTile(TileView tile) {

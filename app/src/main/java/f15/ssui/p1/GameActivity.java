@@ -68,4 +68,11 @@ public class GameActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void incrementScore() {
+        TextView scoreText = (TextView) findViewById(R.id.scoreText);
+
+        score++;
+        scoreText.setText("Score: " + score);
+    }
+
 }
