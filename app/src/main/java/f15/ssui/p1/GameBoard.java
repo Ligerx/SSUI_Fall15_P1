@@ -24,6 +24,9 @@ public class GameBoard extends ViewGroup {
     // ref to the blank tile
     private TileView blankTile;
 
+    // random tile location generator
+    private Random generator = new Random();
+
 
     /**
      * Constructors
@@ -55,6 +58,7 @@ public class GameBoard extends ViewGroup {
         Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.duck);
         ImageSplitter tileImages = new ImageSplitter(width, height, tileWidth, tileHeight, image);
 
+        //// Go through all tiles and set them up
         // Loop through rows
         for (int row = 0; row < NUM_ROWS; row++) {
             // Loop through columns
@@ -85,7 +89,64 @@ public class GameBoard extends ViewGroup {
                         (col * tileWidth) + tileWidth, (row * tileHeight) + tileHeight);
             }
         }
+
+        //// ALSO SHUFFLE THE BOARD
+        shuffleBoard(50);
     }
+
+
+    public void shuffleBoard(int times) {
+        for(int i = 0; i < times; i++) {
+            swapRandomTile();
+        }
+    }
+
+    // Randomly pick an adjacent tile to the blank and swap it
+    public void swapRandomTile() {
+        int row = this.blankTile.getRow();
+        int col = this.blankTile.getCol();
+
+        boolean moved = false;
+
+        while(!moved) {
+            int rand = generator.nextInt(4); // 0-3 I believe
+            int nextCol = col;
+            int nextRow = row;
+
+            // Pick a direction to move
+            if(rand == 0) { // up
+                nextRow++;
+            }else if(rand == 1) { // right
+                nextCol++;
+            }else if(rand == 2) { // down
+                nextRow--;
+            }else if(rand == 3) { // left
+                nextCol--;
+            }
+
+            if(isValidCoordinate(nextCol, nextRow)) {
+                TileView tileToSwap = getTileAt(nextCol, nextRow);
+                swapTileWithBlank(tileToSwap);
+
+                moved = true;
+            }
+        }
+    }
+
+    private boolean isValidCoordinate(int col, int row) {
+        if(row < 0 || col < 0) {
+            return false;
+        }
+        else if(row >= NUM_ROWS || col >= NUM_ROWS) { // >= because # is a total, not 0-counting
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+
+
 
     private TileView setupAndGetTileView(int col, int row, ImageSplitter tileImages) {
         // Setup TileView data
@@ -175,10 +236,6 @@ public class GameBoard extends ViewGroup {
     }
 
     private void swapTileWithBlank(TileView tile) {
-        // FIXME the tiles are currently only a background color.
-        // There's no actual bitmap on them.
-        // Need to figure out how to split the image first.
-
         BitmapDrawable tileDrawable = (BitmapDrawable)tile.getDrawable();
         BitmapDrawable blankDrawable = (BitmapDrawable)getBlankTile().getDrawable();
 

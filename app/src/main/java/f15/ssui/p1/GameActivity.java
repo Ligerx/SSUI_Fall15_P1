@@ -2,10 +2,8 @@ package f15.ssui.p1;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -41,30 +39,11 @@ public class GameActivity extends AppCompatActivity {
                 score = 0;
                 scoreText.setText("Score: " + score);
 
-                // TODO: Put your code that shuffles the puzzle here.
-
+                // Shuffle the puzzle
+                GameBoard gameBoard = (GameBoard) findViewById(R.id.gameBoard);
+                gameBoard.shuffleBoard(50);
             }
         });
-
-
-
-
-        View gameBoard = findViewById(R.id.gameBoard);
-        gameBoard.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                TileView tile = (TileView) v;
-                Log.i("onClick info", "Clicked view's info: -------------------");
-                Log.i("onClick info", "col: "+tile.getCol());
-                Log.i("onClick info", "row: "+tile.getRow());
-                Log.i("onClick info", "img num:" + tile.getImgNum());
-
-                return true;
-            }
-        });
-
-
-//        setContentView(R.layout.activity_game);
     }
 
     @Override
@@ -88,4 +67,5 @@ public class GameActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
