@@ -1,6 +1,8 @@
 package f15.ssui.p1;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -47,16 +49,22 @@ public class GameBoard extends ViewGroup {
         int tileWidth = width / NUM_COLUMNS;
         int tileHeight = height / NUM_ROWS;
 
+        // Image stuff
+        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.duck);
+        ImageSplitter tileImages = new ImageSplitter(width, height, tileWidth, tileHeight, image);
+
         // Loop through rows
         for (int row = 0; row < NUM_ROWS; row++) {
             // Loop through columns
             for (int col = 0; col < NUM_COLUMNS; col++) {
                 Log.d("column and row", "col: " + col + " row: " + row);
 
+                int currentIndex = coordinateToIndex(col, row);
+
                 // Get tile and set it up
                 TileView tile = getTileAt(col, row);
                 tile.setGridLocation(col, row);
-                tile.setImgNum(coordinateToIndex(col, row));
+                tile.setImgNum(currentIndex);
 
 
                 tile.setOnClickListener(new View.OnClickListener() {
@@ -71,24 +79,21 @@ public class GameBoard extends ViewGroup {
 
 
 
-                // Give tile a random color (temporary)
-                Random rnd = new Random();
-                int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-                tile.setBackgroundColor(color);
-
-
-
-
-
+                if(tileImages != null) {
+                    tile.setImageBitmap(tileImages.getImageAtIndex(currentIndex));
+                }
+                else {
+                    // Give tile a random color (temporary)
+                    Random rnd = new Random();
+                    int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+                    tile.setBackgroundColor(color);
+                }
 
 
                 // 15 is the last tile. Special case
-                if(15 == coordinateToIndex(col, row)) {
+                if(15 == currentIndex) {
                     setBlankTile(tile);
                     tile.setBackgroundColor(Color.WHITE);
-
-//Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.duck);
-//tile.setImageBitmap(image);
                 }
 
                 // Set tile corners
