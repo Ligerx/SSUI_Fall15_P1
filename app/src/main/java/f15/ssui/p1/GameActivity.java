@@ -79,9 +79,11 @@ public class GameActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if(id == R.id.show_solution) {
+            return false;
+        }
+        else if(id == R.id.show_last_move) {
+            return false;
         }
 
         return super.onOptionsItemSelected(item);
