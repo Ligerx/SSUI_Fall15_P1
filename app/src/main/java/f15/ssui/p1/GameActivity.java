@@ -8,12 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-/**
- * The main activity class acting as the controller for the puzzle game. It handles the events for
- * the game layout and implements the game logic.
- *
- * @author Nikola (nbanovic@cs.cmu.edu)
- */
 public class GameActivity extends AppCompatActivity {
     private int score = 0; // number of moves taken
 
@@ -24,7 +18,6 @@ public class GameActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_game);
 
-        // Find the new game button in the layout.
         Button newGameButton = (Button) findViewById(R.id.newGameButton);
 
         // Register the onClick listener to detect when the users selects a new game.

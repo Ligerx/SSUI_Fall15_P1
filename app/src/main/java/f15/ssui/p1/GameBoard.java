@@ -74,7 +74,7 @@ public class GameBoard extends ViewGroup {
                 setTileOnClickListener(tile);
 
                 // 15 is the last tile. Special case
-               if(NUM_ROWS * NUM_COLUMNS - 1 == coordinateToIndex(col, row)) {
+               if(NUM_ROWS * NUM_COLUMNS - 1 == tile.getImgNum()) {
                     setBlankTile(tile);
                     tile.setImageBitmap(createWhiteTile(tileWidth, tileHeight));
                 }
@@ -85,8 +85,10 @@ public class GameBoard extends ViewGroup {
             }
         }
 
-        //// ALSO SHUFFLE THE BOARD
-        shuffler.shuffleBoard();
+        //// ALSO SHUFFLE THE BOARD unless you're restoring previous state
+        if(restoredImageOrder == null) {
+            shuffler.shuffleBoard();
+        }
     }
 
     private void setTileOnClickListener(TileView tile) {
@@ -104,11 +106,15 @@ public class GameBoard extends ViewGroup {
 
     // Get the current order the tiles are in. Useful for recreating puzzle state
     public ArrayList<Integer> getCurrentImageOrder() {
+        Log.d("current image order", "---- getCurrentImageOrder()");
+
         ArrayList<Integer> order = new ArrayList<>();
 
         for(int i = 0; i < getChildCount(); i++) {
             TileView tile = (TileView) getChildAt(i);
             order.add(tile.getImgNum());
+
+            Log.d("current image order", "" + tile.getImgNum());
         }
 
         return order;
@@ -126,6 +132,8 @@ public class GameBoard extends ViewGroup {
             if(this.restoredImageOrder != null) {
                 // Restore previous image tile bitmap AND num
                 int previousLocation = this.restoredImageOrder.get(coordinateToIndex(col, row));
+
+                Log.d("reset image order", "" + previousLocation);
 
                 tile.setImgNum(previousLocation);
                 tileImage = tileImages.getImageAtIndex(previousLocation);
@@ -244,6 +252,10 @@ public class GameBoard extends ViewGroup {
 
     public void setRestoredImageOrder(ArrayList<Integer> restoredImageOrder) {
         this.restoredImageOrder = restoredImageOrder;
+
+        for(int i = 0; i < restoredImageOrder.size(); i++) {
+            Log.d("setrestored image order", "" + restoredImageOrder.get(i));
+        }
     }
 
 }
