@@ -41,7 +41,7 @@ public class GameActivity extends AppCompatActivity {
 
                 // Shuffle the puzzle
                 GameBoard gameBoard = (GameBoard) findViewById(R.id.gameBoard);
-                gameBoard.shuffleBoard();
+                gameBoard.shuffler.shuffleBoard();
             }
         });
     }
@@ -52,7 +52,7 @@ public class GameActivity extends AppCompatActivity {
         GameBoard gameBoard = (GameBoard) findViewById(R.id.gameBoard);
 
         // save order that tiles are currently in
-        outState.putIntegerArrayList("imageOrder", gameBoard.getImageOrder());
+        outState.putIntegerArrayList("imageOrder", gameBoard.getCurrentImageOrder());
 
         // save where the blank tile is
         // FIXME board should just draw the tile with img# 15, making this unnecessary

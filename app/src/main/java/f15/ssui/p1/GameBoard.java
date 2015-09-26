@@ -6,8 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -23,28 +21,29 @@ public class GameBoard extends ViewGroup {
     final int NUM_ROWS = 4;
     final int NUM_COLUMNS = 4;
 
-    // # times to shuffle the board
-    final int SHUFFLE_TIMES = 100;
+    final int SHUFFLE_TIMES = 3; // # times to shuffle the board
 
-    // ref to the blank tile
-    private TileView blankTile;
+    private TileView blankTile; // ref to the blank tile
 
-    // random tile location generator
-    private Random generator = new Random();
+    private ArrayList<Integer> restoredImageOrder; // put order that image tiles should be restored here
 
-    // put order that image tiles should be restored here
-    private ArrayList<Integer> restoredImageOrder;
+    public BoardShuffler shuffler;
 
+    public TileSwapper swapper;
 
     /**
      * Constructors
      */
     public GameBoard(Context context) {
         super(context);
+        this.swapper = new TileSwapper(this);
+        this.shuffler = new BoardShuffler(this.SHUFFLE_TIMES, this, this.swapper);
     }
 
     public GameBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.swapper = new TileSwapper(this);
+        this.shuffler = new BoardShuffler(this.SHUFFLE_TIMES, this, this.swapper);
     }
 
 
@@ -56,15 +55,12 @@ public class GameBoard extends ViewGroup {
         // 4x4 grid
         if(getChildCount() != 16) { Log.e("children", "Not given 16 children!?"); return; }
 
-        int width = getWidth();
-        int height = getHeight();
-
-        int tileWidth = width / NUM_COLUMNS;
-        int tileHeight = height / NUM_ROWS;
-
         // Image stuff
         Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.duck);
-        ImageSplitter tileImages = new ImageSplitter(width, height, tileWidth, tileHeight, image);
+        ImageSplitter tileImages = new ImageSplitter(getWidth(), getHeight(), NUM_COLUMNS, NUM_ROWS, image);
+
+        int tileWidth = getWidth() / NUM_COLUMNS;
+        int tileHeight = getHeight() / NUM_ROWS;
 
         //// Go through all tiles and set them up
         // Loop through rows
@@ -73,13 +69,12 @@ public class GameBoard extends ViewGroup {
             for (int col = 0; col < NUM_COLUMNS; col++) {
                 Log.d("column and row", "col: " + col + " row: " + row);
 
-                // Set up tile
                 TileView tile = setupAndGetTileView(col, row, tileImages);
+
                 setTileOnClickListener(tile);
 
-
                 // 15 is the last tile. Special case
-                if(15 == coordinateToIndex(col, row)) {
+               if(NUM_ROWS * NUM_COLUMNS - 1 == coordinateToIndex(col, row)) {
                     setBlankTile(tile);
                     tile.setImageBitmap(createWhiteTile(tileWidth, tileHeight));
                 }
@@ -91,7 +86,7 @@ public class GameBoard extends ViewGroup {
         }
 
         //// ALSO SHUFFLE THE BOARD
-        shuffleBoard();
+        shuffler.shuffleBoard();
     }
 
     private void setTileOnClickListener(TileView tile) {
@@ -107,48 +102,9 @@ public class GameBoard extends ViewGroup {
         });
     }
 
-
-    public void shuffleBoard() {
-        for(int i = 0; i < this.SHUFFLE_TIMES; i++) {
-            swapRandomTile();
-        }
-    }
-
-    // Randomly pick an adjacent tile to the blank and swap it
-    public void swapRandomTile() {
-        int row = this.blankTile.getRow();
-        int col = this.blankTile.getCol();
-
-        boolean moved = false;
-
-        while(!moved) {
-            int rand = generator.nextInt(4); // 0-3 I believe
-            int nextCol = col;
-            int nextRow = row;
-
-            // Pick a direction to move
-            if(rand == 0) { // up
-                nextRow++;
-            }else if(rand == 1) { // right
-                nextCol++;
-            }else if(rand == 2) { // down
-                nextRow--;
-            }else if(rand == 3) { // left
-                nextCol--;
-            }
-
-            if(isValidCoordinate(nextCol, nextRow)) {
-                TileView tileToSwap = getTileAt(nextCol, nextRow);
-                swapTileWithBlank(tileToSwap);
-
-                moved = true;
-            }
-        }
-    }
-
     // Get the current order the tiles are in. Useful for recreating puzzle state
-    public ArrayList<Integer> getImageOrder() {
-        ArrayList<Integer> order = new ArrayList<Integer>();
+    public ArrayList<Integer> getCurrentImageOrder() {
+        ArrayList<Integer> order = new ArrayList<>();
 
         for(int i = 0; i < getChildCount(); i++) {
             TileView tile = (TileView) getChildAt(i);
@@ -157,21 +113,6 @@ public class GameBoard extends ViewGroup {
 
         return order;
     }
-
-    private boolean isValidCoordinate(int col, int row) {
-        if(row < 0 || col < 0) {
-            return false;
-        }
-        else if(row >= NUM_ROWS || col >= NUM_ROWS) { // >= because # is a total, not 0-counting
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
-
-
-
 
     private TileView setupAndGetTileView(int col, int row, ImageSplitter tileImages) {
         // Setup TileView data
@@ -234,7 +175,7 @@ public class GameBoard extends ViewGroup {
     }
 
     // Getter, conveniently turns coordinates into a TileView
-    private TileView getTileAt(int col, int row) {
+    public TileView getTileAt(int col, int row) {
         Log.d("GetTileAt", String.valueOf(col + row * 4));
         return (TileView) getChildAt(coordinateToIndex(col, row));
     }
@@ -252,7 +193,7 @@ public class GameBoard extends ViewGroup {
         // Escape click if not next to a blank tile
         if(!isNextToBlankTile(tile)) { Log.d("gameboard handle click", "Not next to blank tile"); return; }
 
-        swapTileWithBlank(tile);
+        swapper.swapTileWithBlank(tile);
 
         // Update score
         GameActivity gameActivity = (GameActivity) getContext();
@@ -281,33 +222,6 @@ public class GameBoard extends ViewGroup {
         }
     }
 
-    private void swapTileWithBlank(TileView tile) {
-        BitmapDrawable tileDrawable = (BitmapDrawable)tile.getDrawable();
-        BitmapDrawable blankDrawable = (BitmapDrawable)getBlankTile().getDrawable();
-
-        // Extra test to see if the images exist first
-        if(tileDrawable != null && blankDrawable != null) {
-            // Swap the images
-            tile.setImageBitmap(blankDrawable.getBitmap());
-            getBlankTile().setImageBitmap(tileDrawable.getBitmap());
-        }
-        else {
-            // TODO just ignore this stuff, not needed anymore
-            // If no bitmap found, swap the background colors instead
-            int tileColor = ((ColorDrawable) tile.getBackground()).getColor();
-            int blankColor = ((ColorDrawable) getBlankTile().getBackground()).getColor();
-
-            tile.setBackgroundColor(blankColor);
-            getBlankTile().setBackgroundColor(tileColor);
-        }
-
-        // swap imgNums as well to keep track of win state
-        getBlankTile().swapImgNums(tile);
-
-        // Update the blank tile reference
-        setBlankTile(tile);
-    }
-
     boolean isWinningState() {
         int numTiles = getChildCount();
 
@@ -320,11 +234,11 @@ public class GameBoard extends ViewGroup {
         return true;
     }
 
-    private void setBlankTile(TileView tile) {
+    public void setBlankTile(TileView tile) {
         this.blankTile = tile;
     }
 
-    private TileView getBlankTile() {
+    public TileView getBlankTile() {
         return this.blankTile;
     }
 

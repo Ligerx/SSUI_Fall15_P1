@@ -1,6 +1,7 @@
 package f15.ssui.p1;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -13,22 +14,28 @@ public class ImageSplitter {
     private int height;
     private int tileWidth;
     private int tileHeight;
+    private int numColumns;
+    private int numRows;
 
-    private Bitmap image; // fitted and scaled
-    private ArrayList<Bitmap> slicedImages = new ArrayList<Bitmap>();
+//    private Bitmap image; // fitted and scaled
+    private ArrayList<Bitmap> slicedImages = new ArrayList<>();
 
 
-    public ImageSplitter(int width, int height, int tileWidth, int tileHeight, Bitmap image) {
+    public ImageSplitter(int width, int height, int numColumns, int numRows, Bitmap image) {
         this.width = width;
         this.height = height;
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
+
+        this.numColumns = numColumns;
+        this.numRows = numRows;
+
+        this.tileWidth = width / numColumns;
+        this.tileHeight = height / numRows;
 
         Bitmap sizedImage = fitImage(image);
         this.slicedImages = sliceImage(sizedImage);
     }
 
-
+    // TODO center the image for trimming??? maybe not necessary?
     private Bitmap fitImage(Bitmap image) {
         Bitmap result = image;
 
@@ -68,13 +75,22 @@ public class ImageSplitter {
 
     // Slice image into ordered pieces
     private ArrayList<Bitmap> sliceImage(Bitmap image) {
-        ArrayList<Bitmap> result = new ArrayList<Bitmap>();
+        ArrayList<Bitmap> result = new ArrayList<>();
 
-        // loop through height
-        for(int y = 0; y < image.getHeight(); y += this.tileHeight) {
-            // loop through width
-            for(int x = 0; x < image.getWidth(); x += this.tileWidth) {
-                result.add(Bitmap.createBitmap(image, x, y, this.tileWidth, this.tileHeight));
+        Log.d("splitting", "---------------------");
+        Log.d("splitting", "bitmap width: " + image.getWidth() + ", bitmap height: " + image.getHeight());
+
+        // loop through rows
+        for(int y = 0; y < numRows; y++) {
+            // loop through columns
+            for(int x = 0; x < numColumns; x++) {
+                Log.d("splitting", "----");
+                Log.d("splitting", "x loc: " + (x * tileWidth) + ", y loc: " + (y * tileHeight));
+                Log.d("splitting", "tileWidth: " + tileWidth + ", height: " + tileHeight);
+                Log.d("splitting", "x dimens:" + (x * tileWidth) + " x " + (x * tileWidth + tileWidth));
+                Log.d("splitting", "y dimens:" + (y * tileHeight) + " x " + (y * tileHeight + tileHeight));
+
+                result.add(Bitmap.createBitmap(image, x * tileWidth, y * tileHeight, tileWidth, tileHeight));
             }
         }
 
