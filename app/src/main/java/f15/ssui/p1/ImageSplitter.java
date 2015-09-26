@@ -17,7 +17,7 @@ public class ImageSplitter {
     private int numColumns;
     private int numRows;
 
-//    private Bitmap image; // fitted and scaled
+    public Bitmap editedImage; // fitted and scaled
     private ArrayList<Bitmap> slicedImages = new ArrayList<>();
 
 
@@ -31,8 +31,8 @@ public class ImageSplitter {
         this.tileWidth = width / numColumns;
         this.tileHeight = height / numRows;
 
-        Bitmap sizedImage = fitImage(image);
-        this.slicedImages = sliceImage(sizedImage);
+        this.editedImage = fitImage(image);
+        this.slicedImages = sliceImage(editedImage);
     }
 
     // TODO center the image for trimming??? maybe not necessary?

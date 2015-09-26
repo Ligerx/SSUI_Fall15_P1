@@ -21,7 +21,7 @@ public class GameBoard extends ViewGroup {
     final int NUM_ROWS = 4;
     final int NUM_COLUMNS = 4;
 
-    final int SHUFFLE_TIMES = 3; // # times to shuffle the board
+    final int SHUFFLE_TIMES = 100; // # times to shuffle the board
 
     private TileView blankTile; // ref to the blank tile
 
@@ -30,6 +30,8 @@ public class GameBoard extends ViewGroup {
     public BoardShuffler shuffler;
 
     public TileSwapper swapper;
+
+    public ImageSplitter imageSplitter;
 
     /**
      * Constructors
@@ -58,6 +60,7 @@ public class GameBoard extends ViewGroup {
         // Image stuff
         Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.duck);
         ImageSplitter tileImages = new ImageSplitter(getWidth(), getHeight(), NUM_COLUMNS, NUM_ROWS, image);
+        this.imageSplitter = tileImages; // save ref to imageSplitter so I can show solution
 
         int tileWidth = getWidth() / NUM_COLUMNS;
         int tileHeight = getHeight() / NUM_ROWS;

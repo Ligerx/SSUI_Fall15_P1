@@ -1,11 +1,18 @@
 package f15.ssui.p1;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 public class GameActivity extends AppCompatActivity {
@@ -80,14 +87,52 @@ public class GameActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == R.id.show_solution) {
-            return false;
+            showSolution();
         }
         else if(id == R.id.show_last_move) {
-            return false;
+            showLastMove();
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    public void showSolution() {
+        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        FrameLayout solution = (FrameLayout) inflater.inflate(R.layout.solution_popup, null);
+
+        // Get full solution image from gameBoard
+        GameBoard gameBoard = (GameBoard) findViewById(R.id.gameBoard);
+        Bitmap image = gameBoard.imageSplitter.editedImage;
+
+        // Set the edited image onto the layout
+        ((ImageView) solution.getChildAt(0)).setImageBitmap(image);
+
+        // Make popup a percentage of the screen size
+        int windowHeight = getResources().getDisplayMetrics().widthPixels;
+        int windowWidth = getResources().getDisplayMetrics().heightPixels;
+
+        final PopupWindow popup = new PopupWindow(solution, (int) (windowHeight * 0.8), (int) (windowWidth * 0.8), true);
+
+        // set background color, also automatically makes it close on outside click
+        popup.setBackgroundDrawable(new ColorDrawable(0xcc000000));
+
+
+        popup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                popup.dismiss();
+            }
+        });
+
+        popup.showAtLocation(findViewById(R.id.activity_game), Gravity.CENTER, 0, 0);
+    }
+
+    public void showLastMove() {
+        // TODO Didn't get around to implementing this one
+    }
+
+
 
     public void incrementScore() {
         updateScore(score + 1);

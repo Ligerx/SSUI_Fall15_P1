@@ -3,7 +3,9 @@
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".GameActivity">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".GameActivity"
+    android:id="@+id/activity_game" >
 
     <!-- Apparently having the TextView width as fill_parent is important -->
     <!-- It helps prevent setText(...) from redrawing everything -->

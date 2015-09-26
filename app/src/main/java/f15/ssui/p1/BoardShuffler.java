@@ -7,13 +7,13 @@ public class BoardShuffler {
     private final int SHUFFLE_TIMES;
     private GameBoard gameBoard;
 
-    // random tile location generator
-    private Random generator = new Random();
+    private Random generator = new Random(); // random tile location generator
 
     private TileSwapper swapper;
 
-
-
+    /**
+     * Constructor
+     */
     public BoardShuffler(int SHUFFLE_TIMES, GameBoard gameBoard, TileSwapper swapper) {
         this.SHUFFLE_TIMES = SHUFFLE_TIMES;
         this.gameBoard = gameBoard;
@@ -21,6 +21,9 @@ public class BoardShuffler {
     }
 
 
+    /**
+     * Call this to shuffle the entire board
+     */
     public void shuffleBoard() {
         for(int i = 0; i < this.SHUFFLE_TIMES; i++) {
             swapRandomTile();
@@ -56,8 +59,6 @@ public class BoardShuffler {
 
                 moved = true;
             }
-
-
         }
     }
 
