@@ -18,19 +18,17 @@ public class GameActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_game);
 
-        Button newGameButton = (Button) findViewById(R.id.newGameButton);
-
         // Register the onClick listener to detect when the users selects a new game.
         // When the user clicks this button, the game should reset the code to 0 and shuffle the
         // puzzle.
+        Button newGameButton = (Button) findViewById(R.id.newGameButton);
         newGameButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Get the score text
                 TextView scoreText = (TextView) findViewById(R.id.scoreText);
 
                 // Reset the score to zero
-                score = 0;
-                scoreText.setText("Score: " + score);
+                updateScore(0);
 
                 // Shuffle the puzzle
                 GameBoard gameBoard = (GameBoard) findViewById(R.id.gameBoard);
@@ -44,17 +42,13 @@ public class GameActivity extends AppCompatActivity {
         //// my data
         GameBoard gameBoard = (GameBoard) findViewById(R.id.gameBoard);
 
-        // save order that tiles are currently in
+        // save order that tiles are currently in - blank tile case is handled
         outState.putIntegerArrayList("imageOrder", gameBoard.getCurrentImageOrder());
 
-        // save where the blank tile is
-        // FIXME board should just draw the tile with img# 15, making this unnecessary
-//        outState.putInt(gameBoard.getBlankTile().getImgNum());
+        // save score
+        outState.putInt("score", score);
 
-        // TODO save the score
-        // make sure to set score on restore state.
-
-        // save
+        // super
         super.onSaveInstanceState(outState);
     }
 
@@ -66,6 +60,9 @@ public class GameActivity extends AppCompatActivity {
         // Restore state members from saved instance
         GameBoard gameBoard = (GameBoard) findViewById(R.id.gameBoard);
         gameBoard.setRestoredImageOrder(savedInstanceState.getIntegerArrayList("imageOrder"));
+
+        // update score in memory and on the UI
+        updateScore(savedInstanceState.getInt("score"));
     }
 
     @Override
@@ -91,9 +88,13 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void incrementScore() {
+        updateScore(score + 1);
+    }
+
+    public void updateScore(int newScore) {
         TextView scoreText = (TextView) findViewById(R.id.scoreText);
 
-        score++;
+        score = newScore;
         scoreText.setText("Score: " + score);
     }
 

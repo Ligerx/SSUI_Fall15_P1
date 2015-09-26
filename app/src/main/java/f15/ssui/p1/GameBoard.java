@@ -73,7 +73,7 @@ public class GameBoard extends ViewGroup {
 
                 setTileOnClickListener(tile);
 
-                // 15 is the last tile. Special case
+                // Last tile (based on image number, not tile location) is a special case
                if(NUM_ROWS * NUM_COLUMNS - 1 == tile.getImgNum()) {
                     setBlankTile(tile);
                     tile.setImageBitmap(createWhiteTile(tileWidth, tileHeight));
