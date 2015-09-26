@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class GameBoard extends ViewGroup {
@@ -30,6 +31,9 @@ public class GameBoard extends ViewGroup {
 
     // random tile location generator
     private Random generator = new Random();
+
+    // put order that image tiles should be restored here
+    private ArrayList<Integer> restoredImageOrder;
 
 
     /**
@@ -69,18 +73,10 @@ public class GameBoard extends ViewGroup {
             for (int col = 0; col < NUM_COLUMNS; col++) {
                 Log.d("column and row", "col: " + col + " row: " + row);
 
+                // Set up tile
                 TileView tile = setupAndGetTileView(col, row, tileImages);
+                setTileOnClickListener(tile);
 
-                // On click listener to communicate to the parent GameBoard
-                tile.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d("tile touch", "in Tile on click");
-
-                        GameBoard gameBoard = (GameBoard) view.getParent();
-                        gameBoard.clickTile((TileView) view);
-                    }
-                });
 
                 // 15 is the last tile. Special case
                 if(15 == coordinateToIndex(col, row)) {
@@ -96,6 +92,19 @@ public class GameBoard extends ViewGroup {
 
         //// ALSO SHUFFLE THE BOARD
         shuffleBoard();
+    }
+
+    private void setTileOnClickListener(TileView tile) {
+        // On click listener to communicate to the parent GameBoard
+        tile.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("tile touch", "in Tile on click");
+
+                GameBoard gameBoard = (GameBoard) view.getParent();
+                gameBoard.clickTile((TileView) view);
+            }
+        });
     }
 
 
@@ -137,6 +146,18 @@ public class GameBoard extends ViewGroup {
         }
     }
 
+    // Get the current order the tiles are in. Useful for recreating puzzle state
+    public ArrayList<Integer> getImageOrder() {
+        ArrayList<Integer> order = new ArrayList<Integer>();
+
+        for(int i = 0; i < getChildCount(); i++) {
+            TileView tile = (TileView) getChildAt(i);
+            order.add(tile.getImgNum());
+        }
+
+        return order;
+    }
+
     private boolean isValidCoordinate(int col, int row) {
         if(row < 0 || col < 0) {
             return false;
@@ -156,11 +177,24 @@ public class GameBoard extends ViewGroup {
         // Setup TileView data
         TileView tile = getTileAt(col, row);
         tile.setGridLocation(col, row);
-        tile.setImgNum(coordinateToIndex(col, row));
 
         // Setup the image shown
         if(tileImages != null) {
-            Bitmap tileImage = tileImages.getImageAtIndex(coordinateToIndex(col, row));
+            Bitmap tileImage;
+
+            if(this.restoredImageOrder != null) {
+                // Restore previous image tile bitmap AND num
+                int previousLocation = this.restoredImageOrder.get(coordinateToIndex(col, row));
+
+                tile.setImgNum(previousLocation);
+                tileImage = tileImages.getImageAtIndex(previousLocation);
+            }
+            else {
+                // else set default image tile bitmap and num
+                tile.setImgNum(coordinateToIndex(col, row));
+                tileImage = tileImages.getImageAtIndex(coordinateToIndex(col, row));
+            }
+
             addWhiteBorder(tileImage, 5);
 
             tile.setImageBitmap(tileImage);
@@ -201,7 +235,7 @@ public class GameBoard extends ViewGroup {
 
     // Getter, conveniently turns coordinates into a TileView
     private TileView getTileAt(int col, int row) {
-        Log.d("GetTileAt", String.valueOf(col+row*4));
+        Log.d("GetTileAt", String.valueOf(col + row * 4));
         return (TileView) getChildAt(coordinateToIndex(col, row));
     }
 
@@ -280,13 +314,11 @@ public class GameBoard extends ViewGroup {
         for(int i = 0; i < numTiles; i++) {
             // Check that all TileViews' imgNum are in order
             TileView tile = (TileView) getChildAt(i);
-System.out.println(tile.getImgNum());
             if(tile.getImgNum() != i) { return false; }
         }
 
         return true;
     }
-
 
     private void setBlankTile(TileView tile) {
         this.blankTile = tile;
@@ -294,6 +326,10 @@ System.out.println(tile.getImgNum());
 
     private TileView getBlankTile() {
         return this.blankTile;
+    }
+
+    public void setRestoredImageOrder(ArrayList<Integer> restoredImageOrder) {
+        this.restoredImageOrder = restoredImageOrder;
     }
 
 }

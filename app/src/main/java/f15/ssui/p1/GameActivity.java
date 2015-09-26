@@ -47,6 +47,35 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //// my data
+        GameBoard gameBoard = (GameBoard) findViewById(R.id.gameBoard);
+
+        // save order that tiles are currently in
+        outState.putIntegerArrayList("imageOrder", gameBoard.getImageOrder());
+
+        // save where the blank tile is
+        // FIXME board should just draw the tile with img# 15, making this unnecessary
+//        outState.putInt(gameBoard.getBlankTile().getImgNum());
+
+        // TODO save the score
+        // make sure to set score on restore state.
+
+        // save
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        // Always call the superclass so it can restore the view hierarchy
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // Restore state members from saved instance
+        GameBoard gameBoard = (GameBoard) findViewById(R.id.gameBoard);
+        gameBoard.setRestoredImageOrder(savedInstanceState.getIntegerArrayList("imageOrder"));
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_game, menu);
